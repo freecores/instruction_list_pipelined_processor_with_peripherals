@@ -1,4 +1,5 @@
 // 16-bit process controller defines
+// 16-bit process controller defines
 
 `define		immDataLen			8
 
@@ -6,6 +7,38 @@
 `define		instLen				15			// 15-bit fixed-length instructions
 `define		instOpCodeLen		5
 `define		instFieldLen		10
+
+
+// control unit
+`define		cuStateLen			4		// max 16 states
+`define		END					`instOpCodeLen'b0
+`define		JMP					`instOpCodeLen'b1
+`define		Ld						`instOpCodeLen'b10
+`define		Ldi					`instOpCodeLen'b11
+`define		ST						`instOpCodeLen'b100
+`define		ADD					`instOpCodeLen'b101
+`define		SUB					`instOpCodeLen'b110
+`define		MUL					`instOpCodeLen'b111
+`define		DIV					`instOpCodeLen'b1000
+`define		AND					`instOpCodeLen'b1001
+`define		OR						`instOpCodeLen'b1010
+`define		XOR					`instOpCodeLen'b1011
+`define		GrT					`instOpCodeLen'b1100
+`define		GE						`instOpCodeLen'b1101
+`define		EQ						`instOpCodeLen'b1110
+`define		LE						`instOpCodeLen'b1111
+`define		LT						`instOpCodeLen'b10000
+`define		PRE					`instOpCodeLen'b10001
+`define		ETY					`instOpCodeLen'b10010
+`define		RST					`instOpCodeLen'b10011
+`define		LdTC					`instOpCodeLen'b10100
+`define		LdACC					`instOpCodeLen'b10101
+`define		UARTrd				`instOpCodeLen'b10110
+`define		UARTwr				`instOpCodeLen'b10111
+`define		SPIxFER				`instOpCodeLen'b11000
+`define		SPIstat				`instOpCodeLen'b11001
+`define		SPIwBUF				`instOpCodeLen'b11010
+`define		SPIrBUF				`instOpCodeLen'b11011
 
 // alu opcodes
 `define		aluOpcodeLen		4
@@ -21,7 +54,7 @@
 `define		SUB_alu				`aluOpcodeLen'b1001
 `define		MUL_alu				`aluOpcodeLen'b1010
 `define		DIV_alu				`aluOpcodeLen'b1011
-
+`define		LD_data				`aluOpcodeLen'b1100
 
 // bit RAM
 `define		bitRamAddrLen		7		// 7-bit address
@@ -41,20 +74,21 @@
 `define		outputAddrLen		7		// 7-bit address
 
 // accumulator multiplexer
-`define		accMuxSelLen		4		// 2^4 = 16 selections available for accumulator
-`define		accMuxSel0			`accMuxSelLen'b0
-`define		accMuxSel1			`accMuxSelLen'b1
-`define		accMuxSel2			`accMuxSelLen'b10
-`define		accMuxSel3			`accMuxSelLen'b11
-`define		accMuxSel4			`accMuxSelLen'b100
-`define		accMuxSel5			`accMuxSelLen'b101
+`define		accMuxSelLen			4		// 2^4 = 16 selections available for accumulator
+`define		accMuxSelImmData		`accMuxSelLen'b0
+`define		accMuxSelAluOut		`accMuxSelLen'b1
+`define		accMuxSelTcLoad		`accMuxSelLen'b10
+`define		accMuxSelTcAcc			`accMuxSelLen'b11
+`define		accMuxSelUart			`accMuxSelLen'b100
+`define		accMuxSelSpiStat		`accMuxSelLen'b101
+`define		accMuxSelSpiBuf		`accMuxSelLen'b110
 
 // operand2 multiplexer
-`define		op2MuxSelLen		4		// 2^4 = 16 selections available for op2
-`define		op2MuxSel0			`op2MuxSelLen'b0
-`define		op2MuxSel1			`op2MuxSelLen'b1
-`define		op2MuxSel2			`op2MuxSelLen'b10
-`define		op2MuxSel3			`op2MuxSelLen'b11
+`define		op2MuxSelLen			4		// 2^4 = 16 selections available for op2
+`define		op2MuxSelInput			`op2MuxSelLen'b0
+`define		op2MuxSelOutput		`op2MuxSelLen'b1
+`define		op2MuxSelBitRam		`op2MuxSelLen'b10
+`define		op2MuxSelByteRam		`op2MuxSelLen'b11
 `define		op2MuxSel4			`op2MuxSelLen'b100
 `define		op2MuxSel5			`op2MuxSelLen'b101
 `define		op2MuxSel6			`op2MuxSelLen'b110
@@ -64,7 +98,7 @@
 // peripheral defines
 `define		timerAndCounter_peripheral
 `define		UART_peripheral
-`define		SPI_peripheral
+//`define		SPI_peripheral
 
 
 //-----------------------------------------------------------------------------------------------------

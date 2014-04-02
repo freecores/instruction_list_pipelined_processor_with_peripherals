@@ -63,6 +63,10 @@
 						aluOutput = subRes[7:0];
 						carryOutput = subRes[8];
 						end
+						
+		`LD_data	:	begin
+						aluOutput = op1;
+						end
 		
 		default		:	begin
 						aluOutput = 16'b0;

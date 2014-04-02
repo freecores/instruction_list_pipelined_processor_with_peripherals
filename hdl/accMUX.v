@@ -3,11 +3,31 @@
 `include "defines.v"
 
 
-module accumulatorMUX (accMuxSel, immData, aluOut, accMuxOut);
+module accumulatorMUX (accMuxSel, immData, aluOut 
+								`ifdef timerAndCounter_peripheral
+								, tcLoadIn, tcAccIn
+								`endif
+								`ifdef UART_peripheral
+								, uartDataIn
+								`endif
+								`ifdef SPI_peripheral
+								, spiStatIn, spiBufIn
+								`endif
+								, accMuxOut
+								);
 
 	input [`accMuxSelLen-1:0]	accMuxSel;
 	input [`immDataLen-1:0]		immData;
 	input	[7:0]	aluOut;
+	`ifdef timerAndCounter_peripheral
+	input [7:0] tcLoadIn, tcAccIn;
+	`endif
+	`ifdef UART_peripheral
+	input [7:0] uartDataIn;
+	`endif
+	`ifdef SPI_peripheral
+	input [7:0] spiStatIn, spiBufIn;
+	`endif
 	
 	output [7:0]	accMuxOut;
 	
@@ -19,13 +39,40 @@ module accumulatorMUX (accMuxSel, immData, aluOut, accMuxOut);
 	
 		case (accMuxSel)
 		
-			`accMuxSel0	:	begin
-								accMuxOut = immData;
-								end
+			`accMuxSelImmData	:	begin
+										accMuxOut = immData;
+										end
 								
-			`accMuxSel1	:	begin
-								accMuxOut = aluOut;
-								end
+			`accMuxSelAluOut	:	begin
+										accMuxOut = aluOut;
+										end
+			
+			`ifdef timerAndCounter_peripheral
+			`accMuxSelTcLoad	:	begin
+										accMuxOut = tcLoadIn;
+										end
+			
+			`accMuxSelTcAcc	:	begin
+										accMuxOut = tcAccIn;
+										end
+			`endif
+			
+			`ifdef UART_peripheral
+			`accMuxSelUart	:		begin
+										accMuxOut = uartDataIn;
+										end
+			`endif
+			
+			`ifdef SPI_peripheral
+			`accMuxSelSpiStat	:	begin
+										accMuxOut = spiStatIn;
+										end
+			
+			`accMuxSelSpiBuf	:	begin
+										accMuxOut = spiBufIn;
+										end
+			`endif
+			
 			
 			default		:	begin
 								accMuxOut = 8'bzzzzzzzz;

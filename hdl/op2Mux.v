@@ -19,19 +19,19 @@ module op2Mux (op2MuxSel, inputReadOut, outputReadOut, bitOut, byteOut, op2MuxOu
 	
 		case (op2MuxSel)
 		
-		`op2MuxSel0		:	begin
+		`op2MuxSelInput	:	begin
 								op2MuxOut = {7'b0, inputReadOut};
 								end
 								
-		`op2MuxSel1		:	begin
+		`op2MuxSelOutput	:	begin
 								op2MuxOut = {7'b0, outputReadOut};
 								end
 								
-		`op2MuxSel2		:	begin
+		`op2MuxSelBitRam	:	begin
 								op2MuxOut = {7'b0, bitOut};
 								end
 								
-		`op2MuxSel3		:	begin
+		`op2MuxSelByteRam	:	begin
 								op2MuxOut = byteOut;
 								end
 								
