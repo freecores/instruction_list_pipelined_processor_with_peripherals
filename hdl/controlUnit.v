@@ -5,7 +5,7 @@
 
 module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 							branch,
-							accMuxSel, accEn, op2MuxSel, aluOpcode,
+							accMuxSel, accEn, op2MuxSel, aluEn, aluOpcode,
 							bitRamEn, bitRamRw, byteRamEn, byteRamRw,
 							inputRead, outputRw
 							
@@ -33,6 +33,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 	output [`accMuxSelLen-1:0]	accMuxSel;
 	output accEn;
 	output [`op2MuxSelLen-1:0]	op2MuxSel;
+	output aluEn;
 	output [`aluOpcodeLen-1:0] aluOpcode;
 	output bitRamEn, bitRamRw, byteRamEn, byteRamRw;
 	output inputRead, outputRw;
@@ -53,6 +54,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 	reg [`accMuxSelLen-1:0]	accMuxSel;
 	reg accEn;
 	reg [`op2MuxSelLen-1:0]	op2MuxSel;
+	reg aluEn;
 	reg [`aluOpcodeLen-1:0] aluOpcode;
 	reg bitRamEn, bitRamRw, byteRamEn, byteRamRw;
 	reg inputRead, outputRw;
@@ -93,7 +95,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 		begin
 			state = s;
 			
-			branch = 0;	accMuxSel = 0;	accEn = 0;	op2MuxSel = 0;	aluOpcode = 0;	bitRamEn = 0;
+			branch = 0;	accMuxSel = 0;	accEn = 0;	op2MuxSel = 0;	aluEn = 0; aluOpcode = 0;	bitRamEn = 0;
 			bitRamRw = 1;	byteRamEn = 0;	byteRamRw = 1;	inputRead = 0;	outputRw = 1;
 			
 			`ifdef timeAndCounter_peripheral
@@ -129,6 +131,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						accMuxSel = 0;
 						accEn = 0;
 						op2MuxSel = 0;
+						aluEn = 0; 
 						aluOpcode = 0;
 						bitRamEn = 0;
 						bitRamRw = 1;
@@ -158,10 +161,14 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				
 						state = sBr;
 						
-						branch = 1;			// branch to some address . . .
+						if (acc0)
+							branch = 1;			// branch to some address . . .
+						else
+							branch = 0;
 						accMuxSel = 0;
 						accEn = 0;
 						op2MuxSel = 0;
+						aluEn = 0; 
 						aluOpcode = 0;
 						bitRamEn = 0;
 						bitRamRw = 1;
@@ -201,14 +208,14 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 							2'b11	:	op2MuxSel = `op2MuxSelByteRam;
 							default:	op2MuxSel = `op2MuxSelInput;
 							endcase
-							
+							aluEn = 1; 
 							aluOpcode = `LD_data;
 							
-						bitRamEn = 0;
+						bitRamEn = 1;
 						bitRamRw = 1;
-						byteRamEn = 0;
+						byteRamEn = 1;
 						byteRamRw = 1;
-						inputRead = 0;
+						inputRead = 1;
 						outputRw = 1;
 						
 						`ifdef timeAndCounter_peripheral
@@ -236,6 +243,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 							accEn = 1;		// acc enabled
 						op2MuxSel = 0;							
 						aluOpcode = 0;
+						aluEn = 0; 
 						bitRamEn = 0;
 						bitRamRw = 1;
 						byteRamEn = 0;
@@ -266,14 +274,13 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						accMuxSel = 0;
 						accEn = 0;
 						op2MuxSel = 0;							
+						aluEn = 0; 
 						aluOpcode = 0;
-						bitRamRw = 0;
-						byteRamRw = 0;
 						inputRead = 0;
 
 							case (iomemCode)
-							2'b01	:	begin	bitRamRw = 0;	byteRamRw = 1;	outputRw = 1; end
-							2'b10	:	begin	bitRamRw = 1;	byteRamRw = 0;	outputRw = 1; end
+							2'b01	:	begin	bitRamRw = 0;	byteRamRw = 1;	outputRw = 1; bitRamEn = 1;	byteRamEn = 1;	end
+							2'b10	:	begin	bitRamRw = 1;	byteRamRw = 0;	outputRw = 1; bitRamEn = 1;	byteRamEn = 1;	end
 							2'b11	:	begin	bitRamRw = 1;	byteRamRw = 1;	outputRw = 0; end
 							default:	begin	bitRamRw = 1;	byteRamRw = 1;	outputRw = 1;	end
 							endcase
@@ -297,7 +304,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`ADD			:	begin
 						state = sAlu;
 						aluOpcode = `ADD_alu;
-						
+						aluEn = 1; 
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -319,7 +326,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`SUB			:	begin
 						state = sAlu;
 						aluOpcode = `SUB_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -344,7 +351,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`AND			:	begin
 						state = sAlu;
 						aluOpcode = `AND_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -367,7 +374,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`OR			:	begin
 						state = sAlu;
 						aluOpcode = `OR_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -390,7 +397,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`XOR			:	begin
 						state = sAlu;
 						aluOpcode = `XOR_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -413,7 +420,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`GrT			:	begin
 						state = sAlu;
 						aluOpcode = `GT_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -438,7 +445,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`GE			:	begin
 						state = sAlu;
 						aluOpcode = `GE_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -463,7 +470,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`EQ			:	begin
 						state = sAlu;
 						aluOpcode = `EQ_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -488,7 +495,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`LE			:	begin
 						state = sAlu;
 						aluOpcode = `LE_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -513,7 +520,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`LT			:	begin
 						state = sAlu;
 						aluOpcode = `LT_alu;
-						
+						aluEn = 1;
 						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
@@ -539,7 +546,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 1;	tcLoadEn = 0;
 						
 						
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						
@@ -561,7 +568,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						entypeEn = 1;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
 						
 						
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						
@@ -584,7 +591,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 1;		tcPresetEn = 0;	tcLoadEn = 0;
 						
 						
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						
@@ -608,7 +615,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						
 						accMuxSel = `accMuxSelTcLoad;		accEn = 1;	// loading TC status data
 						
-						aluOpcode = 0;		branch = 0;			op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;			op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						
@@ -632,7 +639,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						
 						accMuxSel = `accMuxSelTcAcc;		accEn = 1;	// loading TC ACC data
 						
-						aluOpcode = 0;		branch = 0;		op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						
@@ -657,7 +664,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						
 						accMuxSel = `accMuxSelUart;		accEn = 1;	// loading UART data
 						
-						aluOpcode = 0;		branch = 0;op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						`ifdef timerAndCounter_peripheral
@@ -680,7 +687,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						
 						uartRead = 0;		uartWrite = 1;
 						
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						`ifdef timerAndCounter_peripheral
@@ -704,7 +711,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						sconEn = 1;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;						
 	
 	
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						`ifdef timerAndCounter_peripheral
@@ -727,7 +734,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						sconEn = 0;		spiStatRead = 1;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;						
 	
 	
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						`ifdef timerAndCounter_peripheral
@@ -750,7 +757,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 1;	spiBufShift = 0;						
 	
 	
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						`ifdef timerAndCounter_peripheral
@@ -773,7 +780,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						sconEn = 0;		spiStatRead = 0;	spiBufRead = 1;	spiBufWrite = 0;	spiBufShift = 0;						
 	
 	
-						aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
+						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
 						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
 						
 						`ifdef timerAndCounter_peripheral
@@ -806,7 +813,9 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 			
 			
 			sLd		:	begin
-							accEn = 0;
+							aluEn = 0;
+							accEn = 1;
+							accMuxSel = `accMuxSelAluOut;
 							state = s;
 							end		// end case sLd
 							
@@ -816,6 +825,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 							end
 							
 			sAlu		:	begin
+							aluEn = 0;
 							accEn = 1;
 							accMuxSel = `accMuxSelAluOut;
 							state = s;

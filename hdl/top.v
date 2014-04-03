@@ -14,7 +14,6 @@ module top(clk, reset, IN, OUT
 				);
 
 
-
 	input	clk,reset;
 	input [`inputNumber-1:0] IN;
 	output [`outputNumber-1:0] OUT;
@@ -50,6 +49,7 @@ module top(clk, reset, IN, OUT
 	wire [`accMuxSelLen-1:0]	accMuxSelOutc;
 	wire accEnOutc;
 	wire [`op2MuxSelLen-1:0]	op2MuxSelOutc;
+	wire aluEnc;
 	wire [`aluOpcodeLen-1:0] aluOpcodeOutc;
 	wire bitRamEnOutc, bitRamRwOutc, byteRamEnOutc, byteRamRwOutc;
 	wire inputReadOutc, outputRwOutc;
@@ -67,6 +67,7 @@ module top(clk, reset, IN, OUT
 	wire [`accMuxSelLen-1:0]	accMuxSelOut;
 	wire accEnOut;
 	wire [`op2MuxSelLen-1:0]	op2MuxSelOut;
+	wire aluEn;
 	wire [`aluOpcodeLen-1:0] aluOpcodeOut;
 	wire bitRamEnOut, bitRamRwOut, byteRamEnOut, byteRamRwOut;
 	wire inputReadOut, outputRwOut;
@@ -140,28 +141,24 @@ module top(clk, reset, IN, OUT
 	wire	[`instFieldLen-1:0] instField1;
 	wire	[`instFieldLen-1:0] instField2;
 	
-	ppReg1	PipeLine_Reg1 (clk, instOpcode, instField, instOpcode1, instField1);
+	ppReg1	PipeLine_Reg1 (clk, instOpCode, instField, instOpCode1, instField1);
 
 
 //-------- Control Unit Module Instance
 
 	controlUnit		CONTROL_UNIT (clk, reset, instOpCode1, accOut[0], instField2[8:7],
-											branchc,
-											accMuxSelc, accEnc, op2MuxSelc, aluOpcodec,
-											bitRamEnc, bitRamRwc, byteRamEnc, byteRamRwc,
-											inputReadc, outputRwc
-											
-											`ifdef timerAndCounter_peripheral
-												, entypeEnc, tcAccReadc, tcResetEnc, tcPresetEnc, tcLoadEnc
-											`endif
-											
-											`ifdef UART_peripheral
-												, uartReadc, uartWritec
-											`endif
-											
-											`ifdef SPI_peripheral
-												, sconEnc, spiStatReadc, spiBufReadc, spiBufWritec, spiBufShiftc
-											`endif
+											branchOutc,
+									accMuxSelOutc, accEnOutc, op2MuxSelOutc, aluEnc, aluOpcodeOutc, bitRamEnOutc,
+									bitRamRwOutc, byteRamEnOutc, byteRamRwOutc, inputReadOutc, outputRwOutc
+								`ifdef timerAndCounter_peripheral
+								, entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc, tcLoadEnOutc
+								`endif
+								`ifdef UART_peripheral
+								, uartReadOutc, uartWriteOutcc
+								`endif
+								`ifdef SPI_peripheral
+								, sconEnOutc, spiStatReadOutc, spiBufReadOutc, spiBufWriteOutc, spiBufShiftOutc
+								`endif
 											
 											);
 
@@ -173,7 +170,7 @@ module top(clk, reset, IN, OUT
 
 	ppReg2	PipeLine_Reg2 (clk,
 									branchOutc,
-									accMuxSelOutc, accEnOutc, op2MuxSelOutc, aluOpcodeOutc, bitRamEnOutc,
+									accMuxSelOutc, accEnOutc, op2MuxSelOutc, aluEnc, aluOpcodeOutc, bitRamEnOutc,
 									bitRamRwOutc, byteRamEnOutc, byteRamRwOutc, inputReadOutc, outputRwOutc
 								`ifdef timerAndCounter_peripheral
 								, entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc, tcLoadEnOutc
@@ -187,7 +184,7 @@ module top(clk, reset, IN, OUT
 								, instField1
 									
 									, branchOut,
-									accMuxSelOut, accEnOut, op2MuxSelOut, aluOpcodeOut,
+									accMuxSelOut, accEnOut, op2MuxSelOut, aluEn, aluOpcodeOut,
 									bitRamEnOut, bitRamRwOut, byteRamEnOut, byteRamRwOut,
 									inputReadOut, outputRwOut
 									
@@ -235,7 +232,7 @@ module top(clk, reset, IN, OUT
 	
 	byteNegator			byteNegatorForOp2Mux (op2MuxOut, instField2[9], op2Out);
 	
-	alu					arithLogicUnit	(aluOpcodeOut, accOut, op2Out, aluOut, carryOut);
+	alu					arithLogicUnit	(aluOpcodeOut, accOut, op2Out, aluEn, aluOut, carryOut);
 	
 	wire bitIn;
 	
@@ -318,14 +315,10 @@ module top(clk, reset, IN, OUT
 
 `ifdef SPI_peripheral
 
-	spiStatReg	SPI_STATUS_REG ();
-	
-	spiConReg	SPI_CONTROL_REG ();
-	
-	spiBufReg	SPI_BUFFER_REG ();
-	
-	spiEngine	SPI_MAIN	();
-	
+
+	spi_top		SPI_TOP (clk, sconEnOut, spiStatReadOut, instField2[7:0], spiStatOut, spiBufWriteOut, spiBufReadOut, aluOut, spiBufOut, MI, MO, SCK);
+
+
 `endif
 	
 endmodule

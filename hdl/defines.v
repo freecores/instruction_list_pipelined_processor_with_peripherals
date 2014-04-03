@@ -98,7 +98,7 @@
 // peripheral defines
 `define		timerAndCounter_peripheral
 `define		UART_peripheral
-//`define		SPI_peripheral
+`define		SPI_peripheral
 
 
 //-----------------------------------------------------------------------------------------------------
