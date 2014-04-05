@@ -15,7 +15,7 @@
 		reg [8:0] aluOutput;
 		reg carryOutput;
 		
-		always @ (op1 or op2 or aluOpcode)
+		always @ (aluEn or addRes or subRes or op1 or op2 or aluOpcode)
 		begin
 
 			

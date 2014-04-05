@@ -29,15 +29,15 @@ module tcPreset (tcPresetEn, presetIn, tcAddr, presetOut);
 	assign presetOut[(`tcPresetLen*5)-1:(`tcPresetLen*4)] = presets[4];
 	assign presetOut[(`tcPresetLen*6)-1:(`tcPresetLen*5)] = presets[5];
 	assign presetOut[(`tcPresetLen*7)-1:(`tcPresetLen*6)] = presets[6];
-	assign presetOut[(`tcPresetLen*8)-1:(`tcPresetLen*7)] = presets[7];
-	assign presetOut[(`tcPresetLen*9)-1:(`tcPresetLen*8)] = presets[8];
-	assign presetOut[(`tcPresetLen*10)-1:(`tcPresetLen*9)] = presets[9];
-	assign presetOut[(`tcPresetLen*11)-1:(`tcPresetLen*10)] = presets[10];
-	assign presetOut[(`tcPresetLen*12)-1:(`tcPresetLen*11)] = presets[11];
-	assign presetOut[(`tcPresetLen*13)-1:(`tcPresetLen*12)] = presets[12];
-	assign presetOut[(`tcPresetLen*14)-1:(`tcPresetLen*13)] = presets[13];
-	assign presetOut[(`tcPresetLen*15)-1:(`tcPresetLen*14)] = presets[14];
-	assign presetOut[(`tcPresetLen*16)-1:(`tcPresetLen*15)] = presets[15];
+//	assign presetOut[(`tcPresetLen*8)-1:(`tcPresetLen*7)] = presets[7];
+//	assign presetOut[(`tcPresetLen*9)-1:(`tcPresetLen*8)] = presets[8];
+//	assign presetOut[(`tcPresetLen*10)-1:(`tcPresetLen*9)] = presets[9];
+//	assign presetOut[(`tcPresetLen*11)-1:(`tcPresetLen*10)] = presets[10];
+//	assign presetOut[(`tcPresetLen*12)-1:(`tcPresetLen*11)] = presets[11];
+//	assign presetOut[(`tcPresetLen*13)-1:(`tcPresetLen*12)] = presets[12];
+//	assign presetOut[(`tcPresetLen*14)-1:(`tcPresetLen*13)] = presets[13];
+//	assign presetOut[(`tcPresetLen*15)-1:(`tcPresetLen*14)] = presets[14];
+//	assign presetOut[(`tcPresetLen*16)-1:(`tcPresetLen*15)] = presets[15];
 	
 
 endmodule

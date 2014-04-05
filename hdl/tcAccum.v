@@ -32,14 +32,14 @@ module tcAccum (tcAccumRead, tcAddr, tcAccumIn, tcAccumOut);
 	assign ACC_all[5] = tcAccumIn[(`tcAccLen*6)-1:(`tcAccLen*5)];
 	assign ACC_all[6] = tcAccumIn[(`tcAccLen*7)-1:(`tcAccLen*6)];
 	assign ACC_all[7] = tcAccumIn[(`tcAccLen*8)-1:(`tcAccLen*7)];
-	assign ACC_all[8] = tcAccumIn[(`tcAccLen*9)-1:(`tcAccLen*8)];
-	assign ACC_all[9] = tcAccumIn[(`tcAccLen*10)-1:(`tcAccLen*9)];
-	assign ACC_all[10] = tcAccumIn[(`tcAccLen*11)-1:(`tcAccLen*10)];
-	assign ACC_all[11] = tcAccumIn[(`tcAccLen*12)-1:(`tcAccLen*11)];
-	assign ACC_all[12] = tcAccumIn[(`tcAccLen*13)-1:(`tcAccLen*12)];
-	assign ACC_all[13] = tcAccumIn[(`tcAccLen*14)-1:(`tcAccLen*13)];
-	assign ACC_all[14] = tcAccumIn[(`tcAccLen*15)-1:(`tcAccLen*14)];
-	assign ACC_all[15] = tcAccumIn[(`tcAccLen*16)-1:(`tcAccLen*15)];
+//	assign ACC_all[8] = tcAccumIn[(`tcAccLen*9)-1:(`tcAccLen*8)];
+//	assign ACC_all[9] = tcAccumIn[(`tcAccLen*10)-1:(`tcAccLen*9)];
+//	assign ACC_all[10] = tcAccumIn[(`tcAccLen*11)-1:(`tcAccLen*10)];
+//	assign ACC_all[11] = tcAccumIn[(`tcAccLen*12)-1:(`tcAccLen*11)];
+//	assign ACC_all[12] = tcAccumIn[(`tcAccLen*13)-1:(`tcAccLen*12)];
+//	assign ACC_all[13] = tcAccumIn[(`tcAccLen*14)-1:(`tcAccLen*13)];
+//	assign ACC_all[14] = tcAccumIn[(`tcAccLen*15)-1:(`tcAccLen*14)];
+//	assign ACC_all[15] = tcAccumIn[(`tcAccLen*16)-1:(`tcAccLen*15)];
 	
 
 endmodule

@@ -8,7 +8,7 @@ module accumulatorMUX (accMuxSel, immData, aluOut
 								, tcLoadIn, tcAccIn
 								`endif
 								`ifdef UART_peripheral
-								, uartDataIn
+								, uartDataIn, uartStatIn
 								`endif
 								`ifdef SPI_peripheral
 								, spiStatIn, spiBufIn
@@ -23,7 +23,7 @@ module accumulatorMUX (accMuxSel, immData, aluOut
 	input [7:0] tcLoadIn, tcAccIn;
 	`endif
 	`ifdef UART_peripheral
-	input [7:0] uartDataIn;
+	input [7:0] uartDataIn, uartStatIn;
 	`endif
 	`ifdef SPI_peripheral
 	input [7:0] spiStatIn, spiBufIn;
@@ -58,8 +58,12 @@ module accumulatorMUX (accMuxSel, immData, aluOut
 			`endif
 			
 			`ifdef UART_peripheral
-			`accMuxSelUart	:		begin
+			`accMuxSelUartData	:		begin
 										accMuxOut = uartDataIn;
+										end
+										
+			`accMuxSelUartStat	:		begin
+										accMuxOut = uartStatIn;
 										end
 			`endif
 			

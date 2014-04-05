@@ -6,18 +6,18 @@
 module pgmCounter (clk, reset, branch, pcIn, pcOut);
 
 	input clk, reset, branch;
-	input [`instLen-1:0] pcIn;
+	input [`instAddrLen-1:0] pcIn;
 	
-	output [`instLen-1:0] pcOut;
+	output [`instAddrLen-1:0] pcOut;
 	
-	reg [`instLen-1:0] pc = `instLen'b0;
+	reg [`instAddrLen-1:0] pc = `instAddrLen'b0;
 	
 	always @ (posedge clk or posedge reset)
 	begin
 	
 		if (reset)
 		begin
-			pc = `instLen'b0;
+			pc = `instAddrLen'b0;
 			$write ("	program counter module is reset. Starting at address 00h	");
 		end
 		

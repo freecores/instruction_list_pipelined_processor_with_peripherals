@@ -4,6 +4,7 @@
 `define		immDataLen			8
 
 // program counter & instruction register
+`define		instAddrLen			10			// 10-bit address => 1024 inst in rom
 `define		instLen				15			// 15-bit fixed-length instructions
 `define		instOpCodeLen		5
 `define		instFieldLen		10
@@ -35,10 +36,11 @@
 `define		LdACC					`instOpCodeLen'b10101
 `define		UARTrd				`instOpCodeLen'b10110
 `define		UARTwr				`instOpCodeLen'b10111
-`define		SPIxFER				`instOpCodeLen'b11000
-`define		SPIstat				`instOpCodeLen'b11001
-`define		SPIwBUF				`instOpCodeLen'b11010
-`define		SPIrBUF				`instOpCodeLen'b11011
+`define		UARTstat				`instOpCodeLen'b11000
+`define		SPIxFER				`instOpCodeLen'b11001
+`define		SPIstat				`instOpCodeLen'b11010
+`define		SPIwBUF				`instOpCodeLen'b11011
+`define		SPIrBUF				`instOpCodeLen'b11100
 
 // alu opcodes
 `define		aluOpcodeLen		4
@@ -79,9 +81,10 @@
 `define		accMuxSelAluOut		`accMuxSelLen'b1
 `define		accMuxSelTcLoad		`accMuxSelLen'b10
 `define		accMuxSelTcAcc			`accMuxSelLen'b11
-`define		accMuxSelUart			`accMuxSelLen'b100
-`define		accMuxSelSpiStat		`accMuxSelLen'b101
-`define		accMuxSelSpiBuf		`accMuxSelLen'b110
+`define		accMuxSelUartData		`accMuxSelLen'b100
+`define		accMuxSelUartStat		`accMuxSelLen'b101
+`define		accMuxSelSpiStat		`accMuxSelLen'b110
+`define		accMuxSelSpiBuf		`accMuxSelLen'b111
 
 // operand2 multiplexer
 `define		op2MuxSelLen			4		// 2^4 = 16 selections available for op2
@@ -108,7 +111,7 @@
 `define		tcPresetLen			8		// 8-bit preset value
 `define		tcAddrLen			4
 `define		tcTypeLen			2		// max 4-types
-`define		tcNumbers			16		// total 16 modules (8-timers, 8-counters)
+`define		tcNumbers			8		// total 8 modules (4-timers, 4-counters)
 
 `define		timerType1			`tcTypeLen'b0
 `define		timerType2			`tcTypeLen'b1

@@ -208,26 +208,26 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 							2'b11	:	op2MuxSel = `op2MuxSelByteRam;
 							default:	op2MuxSel = `op2MuxSelInput;
 							endcase
-							aluEn = 1; 
+							aluEn = 1'b1; 
 							aluOpcode = `LD_data;
 							
-						bitRamEn = 1;
-						bitRamRw = 1;
-						byteRamEn = 1;
-						byteRamRw = 1;
-						inputRead = 1;
-						outputRw = 1;
+						bitRamEn = 1'b1;
+						bitRamRw = 1'b1;
+						byteRamEn = 1'b1;
+						byteRamRw = 1'b1;
+						inputRead = 1'b1;
+						outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end	// end case Ld
@@ -238,29 +238,29 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`Ldi			:	begin
 						state = sAlu;
 						
-						branch = 0;
+						branch = 1'b0;
 							accMuxSel = `accMuxSelImmData;	// select imm data thr mux
-							accEn = 1;		// acc enabled
-						op2MuxSel = 0;							
-						aluOpcode = 0;
-						aluEn = 0; 
-						bitRamEn = 0;
-						bitRamRw = 1;
-						byteRamEn = 0;
-						byteRamRw = 1;
-						inputRead = 0;
-						outputRw = 1;
+							accEn = 1'b1;		// acc enabled
+						op2MuxSel = 1'b0;							
+						aluOpcode = 1'b0;
+						aluEn = 1'b0; 
+						bitRamEn = 1'b0;
+						bitRamRw = 1'b1;
+						byteRamEn = 1'b0;
+						byteRamRw = 1'b1;
+						inputRead = 1'b0;
+						outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end		// end case Ldi
@@ -270,31 +270,31 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`ST			:	begin
 						state = sSt;
 						
-						branch = 0;
-						accMuxSel = 0;
-						accEn = 0;
-						op2MuxSel = 0;							
-						aluEn = 0; 
-						aluOpcode = 0;
-						inputRead = 0;
+						branch = 1'b0;
+						accMuxSel = 1'b0;
+						accEn = 1'b0;
+						op2MuxSel = 1'b0;							
+						aluEn = 1'b0; 
+						aluOpcode = 1'b0;
+						inputRead = 1'b0;
 
 							case (iomemCode)
-							2'b01	:	begin	bitRamRw = 0;	byteRamRw = 1;	outputRw = 1; bitRamEn = 1;	byteRamEn = 1;	end
-							2'b10	:	begin	bitRamRw = 1;	byteRamRw = 0;	outputRw = 1; bitRamEn = 1;	byteRamEn = 1;	end
-							2'b11	:	begin	bitRamRw = 1;	byteRamRw = 1;	outputRw = 0; end
-							default:	begin	bitRamRw = 1;	byteRamRw = 1;	outputRw = 1;	end
+							2'b01	:	begin	bitRamRw = 1'b0;	byteRamRw = 1'b1;	outputRw = 1'b1; bitRamEn = 1'b1;	byteRamEn = 1'b1;	end
+							2'b10	:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b0;	outputRw = 1'b1; bitRamEn = 1'b1;	byteRamEn = 1'b1;	end
+							2'b11	:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b1;	outputRw = 1'b0; end
+							default:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b1;	outputRw = 1'b1;	end
 							endcase
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 
 				end
@@ -304,20 +304,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`ADD			:	begin
 						state = sAlu;
 						aluOpcode = `ADD_alu;
-						aluEn = 1; 
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1; 
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -326,20 +326,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`SUB			:	begin
 						state = sAlu;
 						aluOpcode = `SUB_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -351,20 +351,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`AND			:	begin
 						state = sAlu;
 						aluOpcode = `AND_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -374,20 +374,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`OR			:	begin
 						state = sAlu;
 						aluOpcode = `OR_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -397,20 +397,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`XOR			:	begin
 						state = sAlu;
 						aluOpcode = `XOR_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -420,20 +420,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`GrT			:	begin
 						state = sAlu;
 						aluOpcode = `GT_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -445,20 +445,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`GE			:	begin
 						state = sAlu;
 						aluOpcode = `GE_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -470,20 +470,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`EQ			:	begin
 						state = sAlu;
 						aluOpcode = `EQ_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -495,20 +495,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`LE			:	begin
 						state = sAlu;
 						aluOpcode = `LE_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -520,20 +520,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`LT			:	begin
 						state = sAlu;
 						aluOpcode = `LT_alu;
-						aluEn = 1;
-						branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b1;
+						branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timeAndCounter_peripheral
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				
 				end
@@ -543,19 +543,19 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`PRE			:	begin
 						state = sTc;
 						
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 1;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b1;	tcLoadEn = 1'b0;
 						
 						
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -565,19 +565,19 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`ETY			:	begin
 						state = sTc;
 						
-						entypeEn = 1;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b1;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						
 						
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -588,19 +588,19 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`RST			:	begin
 						state = sTc;
 						
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 1;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b1;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						
 						
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -611,20 +611,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`LdTC			:	begin
 						state = sTc;
 						
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 1;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b1;
 						
-						accMuxSel = `accMuxSelTcLoad;		accEn = 1;	// loading TC status data
+						accMuxSel = `accMuxSelTcLoad;		accEn = 1'b1;	// loading TC status data
 						
-						aluEn = 0;	aluOpcode = 0;		branch = 0;			op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;			op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -635,20 +635,20 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`LdACC			:	begin
 						state = sTc;
 						
-						entypeEn = 0;		tcAccRead = 1;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b1;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						
-						accMuxSel = `accMuxSelTcAcc;		accEn = 1;	// loading TC ACC data
+						accMuxSel = `accMuxSelTcAcc;		accEn = 1'b1;	// loading TC ACC data
 						
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						
 						`ifdef UART_peripheral
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -660,20 +660,44 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`UARTrd			:	begin
 						state = sUart;
 						
-						uartRead = 1;		uartWrite = 0;
+						uartRead = 1'b1;		uartWrite = 1'b0;
 						
-						accMuxSel = `accMuxSelUart;		accEn = 1;	// loading UART data
+						accMuxSel = `accMuxSelUartData;		accEn = 1'b1;	// loading UART data
 						
-						aluEn = 0;	aluOpcode = 0;		branch = 0;op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timerAndCounter_peripheral
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
+						`endif
+				end
+				`endif
+
+
+
+				`ifdef UART_peripheral
+				`UARTstat			:	begin
+						state = sUart;
+						
+						uartRead = 1'b0;		uartWrite = 1'b0;
+						
+						accMuxSel = `accMuxSelUartStat;		accEn = 1'b1;	// loading UART status
+						
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
+						
+						`ifdef timerAndCounter_peripheral
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
+						`endif
+						
+						
+						`ifdef SPI_peripheral
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -685,18 +709,18 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`UARTwr			:	begin
 						state = sUart;
 						
-						uartRead = 0;		uartWrite = 1;
+						uartRead = 1'b0;		uartWrite = 1'b1;
 						
-						aluEn = 0;	aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timerAndCounter_peripheral
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						
 						`ifdef SPI_peripheral
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 						`endif
 				end
 				`endif
@@ -708,18 +732,18 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`SPIxFER			:	begin
 						state = sSpi;
 										
-						sconEn = 1;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;						
+						sconEn = 1'b1;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;						
 	
 	
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timerAndCounter_peripheral
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-						uartRead = 0;		uartWrite = 0;
+						uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 				end
@@ -731,18 +755,18 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`SPIstat			:	begin
 						state = sSpi;
 										
-						sconEn = 0;		spiStatRead = 1;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;						
+						sconEn = 1'b0;		spiStatRead = 1'b1;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;						
 	
 	
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timerAndCounter_peripheral
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-						uartRead = 0;		uartWrite = 0;
+						uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 				end
@@ -754,18 +778,18 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`SPIwBUF			:	begin
 						state = sSpi;
 										
-						sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 1;	spiBufShift = 0;						
+						sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b1;	spiBufShift = 1'b0;						
 	
 	
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timerAndCounter_peripheral
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-						uartRead = 0;		uartWrite = 0;
+						uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 				end
@@ -777,18 +801,18 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				`SPIrBUF			:	begin
 						state = sSpi;
 										
-						sconEn = 0;		spiStatRead = 0;	spiBufRead = 1;	spiBufWrite = 0;	spiBufShift = 0;						
+						sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b1;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;						
 	
 	
-						aluEn = 0;	aluOpcode = 0;		branch = 0;		accMuxSel = 0;		accEn = 0;	op2MuxSel = 0;
-						bitRamEn = 0;	bitRamRw = 1;	byteRamEn = 0;		byteRamRw = 1;		inputRead = 0;		outputRw = 1;
+						aluEn = 1'b0;	aluOpcode = 1'b0;		branch = 1'b0;		accMuxSel = 1'b0;		accEn = 1'b0;	op2MuxSel = 1'b0;
+						bitRamEn = 1'b0;	bitRamRw = 1'b1;	byteRamEn = 1'b0;		byteRamRw = 1'b1;		inputRead = 1'b0;		outputRw = 1'b1;
 						
 						`ifdef timerAndCounter_peripheral
-						entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+						entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 						`endif
 						
 						`ifdef UART_peripheral
-						uartRead = 0;		uartWrite = 0;
+						uartRead = 1'b0;		uartWrite = 1'b0;
 						`endif
 						
 				end
@@ -807,47 +831,47 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 			
 			
 			sBr		:	begin
-							branch = 0;
+							branch = 1'b0;
 							state = s;
 							end		// end case sBr
 			
 			
 			sLd		:	begin
-							aluEn = 0;
-							accEn = 1;
+							aluEn = 1'b0;
+							accEn = 1'b1;
 							accMuxSel = `accMuxSelAluOut;
 							state = s;
 							end		// end case sLd
 							
 			sSt		:	begin
-							bitRamRw = 1;	byteRamRw = 1; outputRw = 1;
+							bitRamRw = 1'b1;	byteRamRw = 1'b1; outputRw = 1'b1;
 							state = s;
 							end
 							
 			sAlu		:	begin
-							aluEn = 0;
-							accEn = 1;
+							aluEn = 1'b0;
+							accEn = 1'b1;
 							accMuxSel = `accMuxSelAluOut;
 							state = s;
 							end
 							
 			`ifdef timerAndCounter_peripheral
 			sTc		:	begin
-							entypeEn = 0;		tcAccRead = 0;	tcResetEn = 0;		tcPresetEn = 0;	tcLoadEn = 0;
+							entypeEn = 1'b0;		tcAccRead = 1'b0;	tcResetEn = 1'b0;		tcPresetEn = 1'b0;	tcLoadEn = 1'b0;
 							state = s;
 							end
 			`endif
 
 			`ifdef UART_peripheral
 			sUart		:	begin
-							uartRead = 0;		uartWrite = 0;
+							uartRead = 1'b0;		uartWrite = 1'b0;
 							state = s;
 							end
 			`endif
 
 			`ifdef SPI_peripheral
 			sSpi		:	begin
-							sconEn = 0;		spiStatRead = 0;	spiBufRead = 0;	spiBufWrite = 0;	spiBufShift = 0;
+							sconEn = 1'b0;		spiStatRead = 1'b0;	spiBufRead = 1'b0;	spiBufWrite = 1'b0;	spiBufShift = 1'b0;
 							state = s;
 							end
 			`endif

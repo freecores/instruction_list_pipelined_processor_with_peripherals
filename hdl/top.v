@@ -58,6 +58,8 @@ module top(clk, reset, IN, OUT
 	`endif
 	`ifdef UART_peripheral
 	wire uartReadOutc, uartWriteOutc;
+	wire [7:0] uartDataOut;
+	wire rxEmpty, txFull;
 	`endif
 	`ifdef SPI_peripheral
 	wire sconEnOutc, spiStatReadOutc, spiBufReadOutc, spiBufWriteOutc, spiBufShiftOutc;
@@ -88,7 +90,7 @@ module top(clk, reset, IN, OUT
 `ifdef timerAndCounter_peripheral
 
 	wire	[(`tcNumbers*`tcPresetLen)-1:0] presetWires;
-	wire	[7:0] tcAccumOut;
+	wire	[7:0] tcAccOut;
 	wire	[7:0] tcLoadOut;
 	wire [`tcNumbers-1:0] enWires;
 	wire [`tcNumbers-1:0] resetWires;
@@ -118,7 +120,7 @@ module top(clk, reset, IN, OUT
 //-------- Fetch Unit Module Instances
 // all necessary
 
-	pgmCounter		ProgramCounter (clk, reset, branchOutc, instField[7:0], pcOut);
+	pgmCounter		ProgramCounter (clk, reset, branchOutc, instField[9:0], pcOut);
 	
 	
 // instruction ROM is declared using xilinx primitive
@@ -132,7 +134,7 @@ module top(clk, reset, IN, OUT
 				 .DO(romOut),
 				 .DOP());
 
-	instReg			IntructionRegister (romOut, instOpCode, instField);
+//	instReg			IntructionRegister (romOut, instOpCode, instField);
 
 
 // pipeline register
@@ -141,7 +143,7 @@ module top(clk, reset, IN, OUT
 	wire	[`instFieldLen-1:0] instField1;
 	wire	[`instFieldLen-1:0] instField2;
 	
-	ppReg1	PipeLine_Reg1 (clk, instOpCode, instField, instOpCode1, instField1);
+	ppReg1	PipeLine_Reg1 (clk, romOut[`instLen-1:`instLen-`instOpCodeLen], romOut[`instFieldLen-1:0], instOpCode1, instField1);
 
 
 //-------- Control Unit Module Instance
@@ -215,7 +217,7 @@ module top(clk, reset, IN, OUT
 										, tcLoadOut, tcAccOut
 										`endif
 										`ifdef UART_peripheral
-										, uartDataOut
+										, uartDataOut, {rxEmpty, txFull}
 										`endif
 										`ifdef SPI_peripheral
 										, spiStatOut, spiBufOut
@@ -261,7 +263,7 @@ module top(clk, reset, IN, OUT
 
 	tcEnableAndType	tcEnableAndTypeModule(entypeEnOut, instField2[6], instField2[5:4], instField2[3:0], enWires, typeWires);
 	
-	tcAccum				tcAccumModule(tcAccumReadOut, instField2[3:0], tcAccumWires, tcAccOut);
+	tcAccum				tcAccumModule(tcAccReadOut, instField2[3:0], tcAccWires, tcAccOut);
 	
 	tcReset				tcResetModule(tcResetEnOut, instField2[4], instField2[3:0], resetWires);
 	

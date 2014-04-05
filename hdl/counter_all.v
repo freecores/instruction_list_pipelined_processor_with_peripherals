@@ -12,8 +12,8 @@ module counter (clk, reset, preset, type, DN, CU, CD, ACC);
 	output DN, CU, CD;
 	output [`tcAccLen-1:0] ACC;
 	
-	reg DN, CU, CD;
-	reg [`tcAccLen-1:0] ACC;
+	reg DN = 0, CU = 0, CD = 0;
+	reg [`tcAccLen-1:0] ACC = 0;
 	
 	reg [`tcTypeLen-1:0] CounterType;
 	reg [`tcTypeLen-1:0] typeNext;

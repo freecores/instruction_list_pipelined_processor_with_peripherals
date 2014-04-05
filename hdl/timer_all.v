@@ -1,14 +1,6 @@
 
-
-
-
-
-
-
-
 `include "timescale.v"
 `include "defines.v"
-
 
 
 module timer (clk, en, reset, type, preset, DN, TT, ACC);
@@ -20,8 +12,8 @@ module timer (clk, en, reset, type, preset, DN, TT, ACC);
 	output DN, TT;
 	output [`tcAccLen-1:0] ACC;
 	
-	reg DN, TT;
-	reg [`tcAccLen-1:0] ACC;
+	reg DN = 0, TT = 0;
+	reg [`tcAccLen-1:0] ACC = 0;
 	
 	reg [`tcTypeLen-1:0]	TimerType;
 	reg [`tcTypeLen-1:0]	typeNext;
@@ -185,6 +177,7 @@ module timer (clk, en, reset, type, preset, DN, TT, ACC);
 				
 				
 				default		:	begin
+									if (!reset)
 									$display("	Error in timer type	");
 									end
 									
@@ -194,4 +187,3 @@ module timer (clk, en, reset, type, preset, DN, TT, ACC);
 
 		
 endmodule
-
