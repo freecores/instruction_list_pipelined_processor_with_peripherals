@@ -17,7 +17,7 @@ module accumulator (accIn, accEn, accOut);
 		if (accEn)
 		begin
 			accOut = accIn;
-			$write (" %b	data written to accumulator	:	module accumulator	", accIn);
+			$write ("\n%b	data written to accumulator	:	module accumulator	", accIn);
 		end
 		else
 		begin

@@ -20,7 +20,7 @@ module bitRam (clk, reset, bitRamEn, bitRamRw, bitRamIn, bitRamAddr, bitRamOut);
 			if (reset)
 			begin
 				bitRamOut = 1'b0;
-				$write ("	module bitRam is reset	");
+				$write ("\nmodule bitRam is reset	");
 			end
 			
 			else
@@ -31,13 +31,13 @@ module bitRam (clk, reset, bitRamEn, bitRamRw, bitRamIn, bitRamAddr, bitRamOut);
 				if (bitRamRw)	// read operation
 				begin
 					bitRamOut = bitRam[bitRamAddr];
-					$write (" reading bit-RAM	:	module bitRAM	");
+//					$write ("\nreading bit-RAM	:	module bitRAM	");
 				end
 				
 				else				// write operation
 				begin
 					bitRam[bitRamAddr] = bitRamIn;
-					$write ("	writing to bit-RAM	:	module bitRam	");
+//					$write ("\nwriting to bit-RAM	:	module bitRam	");
 				end
 			end
 			

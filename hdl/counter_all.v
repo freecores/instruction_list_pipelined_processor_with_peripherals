@@ -39,7 +39,7 @@ module counter (clk, reset, preset, type, DN, CU, CD, ACC);
 								end
 								
 		default			:	begin
-								$display ("counter is of undefined type.\n Valid types are Up counter & Down counter");
+								$display ("\ncounter is of undefined type.\n Valid types are Up counter & Down counter");
 								end
 		endcase
 	end
@@ -110,7 +110,7 @@ module counter (clk, reset, preset, type, DN, CU, CD, ACC);
 		
 		
 		default		:	begin
-							$display ("	error in counter type	");
+							$display ("\nerror in counter type	");
 							end
 				
 		endcase

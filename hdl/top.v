@@ -30,7 +30,7 @@ module top(clk, reset, IN, OUT
 
 // wires (interconnects) of execution unit
 
-	wire	[`instLen-1:0]			pcOut;
+	wire	[`instAddrLen-1:0]			pcOut;
 	wire	[`instOpCodeLen+`instFieldLen-1:0] romOut;
 	wire	[`instOpCodeLen-1:0]	instOpCode;
 	wire	[`instFieldLen-1:0] 	instField;
@@ -100,27 +100,36 @@ module top(clk, reset, IN, OUT
 
 `endif
 
-// wires (interconnects) of UART
+`ifdef SPI_peripheral
 
-	`ifdef UART_peripheral
-	
-		
-		
-	`endif
-	
-// wires (interconnects) of SPI
+	wire [7:0] spiStatOut, spiBufOut;
+`endif
 
-	`ifdef SPI_peripheral
-	
-	`endif
 
+	wire clk_d, clk_t;
+	reg [10:0] cnt = 0;
+	
+	always @ (posedge clk or posedge reset)
+	begin
+		if (reset)
+		begin
+			cnt =0;
+		end
+		else
+		begin
+			cnt = cnt + 1'b1;
+		end
+	end
+	
+	assign clk_d = cnt[0];
+	assign clk_t = cnt[10];
 
 	
 
 //-------- Fetch Unit Module Instances
 // all necessary
 
-	pgmCounter		ProgramCounter (clk, reset, branchOutc, instField[9:0], pcOut);
+	pgmCounter		ProgramCounter (clk_d, reset, branchOutc, instField[9:0], pcOut);
 	
 	
 // instruction ROM is declared using xilinx primitive
@@ -130,12 +139,11 @@ module top(clk, reset, IN, OUT
 				 .EN(1'b1),
 				 .WE(),   
 				 .SSR(1'b0),
-				 .CLK(clk),
+				 .CLK(clk_d),
 				 .DO(romOut),
 				 .DOP());
 
-//	instReg			IntructionRegister (romOut, instOpCode, instField);
-
+//	rom	CodeMem (pcOut, romOut);
 
 // pipeline register
 
@@ -143,7 +151,7 @@ module top(clk, reset, IN, OUT
 	wire	[`instFieldLen-1:0] instField1;
 	wire	[`instFieldLen-1:0] instField2;
 	
-	ppReg1	PipeLine_Reg1 (clk, romOut[`instLen-1:`instLen-`instOpCodeLen], romOut[`instFieldLen-1:0], instOpCode1, instField1);
+	ppReg1	PipeLine_Reg1 (clk_d, romOut[`instLen-1:`instLen-`instOpCodeLen], romOut[`instFieldLen-1:0], instOpCode1, instField1);
 
 
 //-------- Control Unit Module Instance
@@ -271,13 +279,13 @@ module top(clk, reset, IN, OUT
 	
 	tcLoad				tcLoadModule(tcLoadEnOut, instField2[3:0], dnWires, ttWires, cuWires, cdWires, tcLoadOut);
 	
-	timer					timer0	(clk, enWires[0], resetWires[0], typeWires[1:0], presetWires[7:0], dnWires[0], ttWires[0], tcAccWires[7:0]);
+	timer					timer0	(clk_t, enWires[0], resetWires[0], typeWires[1:0], presetWires[7:0], dnWires[0], ttWires[0], tcAccWires[7:0]);
 	
-	timer					timer1	(clk, enWires[1], resetWires[1], typeWires[3:2], presetWires[15:8], dnWires[1], ttWires[1], tcAccWires[15:8]);
+	timer					timer1	(clk_t, enWires[1], resetWires[1], typeWires[3:2], presetWires[15:8], dnWires[1], ttWires[1], tcAccWires[15:8]);
 	
-	timer					timer2	(clk, enWires[2], resetWires[2], typeWires[5:4], presetWires[23:16], dnWires[2], ttWires[2], tcAccWires[23:16]);
+	timer					timer2	(clk_t, enWires[2], resetWires[2], typeWires[5:4], presetWires[23:16], dnWires[2], ttWires[2], tcAccWires[23:16]);
 	
-	timer					timer3	(clk, enWires[3], resetWires[3], typeWires[7:6], presetWires[31:24], dnWires[3], ttWires[3], tcAccWires[31:24]);
+	timer					timer3	(clk_t, enWires[3], resetWires[3], typeWires[7:6], presetWires[31:24], dnWires[3], ttWires[3], tcAccWires[31:24]);
 	
 	counter				counter0	(enWires[4], resetWires[4], presetWires[39:32], typeWires[9:8], dnWires[4], cuWires[0], cdWires[0], tcAccWires[39:32]);
 	

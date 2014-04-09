@@ -20,7 +20,7 @@ module byteRam (clk, reset, byteRamEn, byteRamRw, byteRamIn, byteRamAddr, byteRa
 			if (reset)
 			begin
 				byteRamOut = `byteRamLen'b0;
-				$write ("	module byteRam is reset	");
+				$write ("\nmodule byteRam is reset	");
 			end
 			
 			else
@@ -32,14 +32,14 @@ module byteRam (clk, reset, byteRamEn, byteRamRw, byteRamIn, byteRamAddr, byteRa
 				if (byteRamRw)		// read operation
 				begin
 					byteRamOut = byteRam[byteRamAddr];
-					$write ("	reading byte RAM : module byteRam	");
+//					$write ("\nreading byte RAM : module byteRam	");
 				end
 				
 				
 				else					// write operation
 				begin
 					byteRam[byteRamAddr] = byteRamIn;
-					$write ("	writing to byte RAM	:	module byteRam	");
+//					$write ("\nwriting to byte RAM	:	module byteRam	");
 				end
 			
 			end

@@ -72,7 +72,7 @@
 				
 				default		:	begin
 								aluOutput = 16'b0;
-								$write ("Unknown operation. \nmodule : ALU");
+								$write ("\nUnknown operation. \tmodule : ALU");
 								end
 				endcase
 				

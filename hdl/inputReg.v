@@ -22,7 +22,7 @@ module inputRegister (reset, inputs, inputRead, inputReadAddr, inputReadOut);
 		if (reset)
 		begin
 			inputReadOut = 1'bz;
-			$write ("	module inputRegister is reset	");
+			$write ("\nmodule inputRegister is reset	");
 		end
 		
 		else
@@ -33,7 +33,7 @@ module inputRegister (reset, inputs, inputRead, inputReadAddr, inputReadOut);
 			if (inputRead)
 			begin
 				inputReadOut = inputReg [inputReadAddr];
-				$write ("	reading input	:	module inputRegister	");
+				$write ("\nreading input	:	module inputRegister	");
 			end
 		
 		end

@@ -820,8 +820,8 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 
 				default		:	begin
 				
-				$write ("	unknown/unused instruction op-code encountered by control unit	");
-				$stop;
+				$write ("\nunknown/unused instruction op-code encountered by control unit	");
+//				$stop;
 				end
 				endcase	// end 	case (instOpCode)
 			

@@ -18,7 +18,7 @@ module pgmCounter (clk, reset, branch, pcIn, pcOut);
 		if (reset)
 		begin
 			pc = `instAddrLen'b0;
-			$write ("	program counter module is reset. Starting at address 00h	");
+			$write ("\nprogram counter module is reset. Starting at address 00h	");
 		end
 		
 		else
@@ -27,7 +27,7 @@ module pgmCounter (clk, reset, branch, pcIn, pcOut);
 			if(branch)
 			begin
 				pc = pcIn;
-				$write ("	branching at address %h", pcIn);
+				$write ("\nbranching at address %h", pcIn);
 			end
 			else
 			begin

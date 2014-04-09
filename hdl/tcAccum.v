@@ -20,7 +20,7 @@ module tcAccum (tcAccumRead, tcAddr, tcAccumIn, tcAccumOut);
 		if (tcAccumRead)
 		begin
 			tcAccumOut = ACC_all[tcAddr];
-			$write ("	reading t/c accumulated value	: module tcAccum	");
+			$write ("\nreading t/c accumulated value	: module tcAccum	");
 		end
 	end
 	

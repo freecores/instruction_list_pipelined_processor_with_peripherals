@@ -13,8 +13,8 @@ module outputReg (reset, outputRw, outputRwAddr, outputWriteIn, outputReadOut, o
 	output [`outputNumber-1:0] outputs;
 	
 	reg outputReadOut;
-	reg [`outputNumber-1:0] outputs;
-	reg [`outputNumber-1 :0] outputReg;
+	reg [`outputNumber-1:0] outputs = 0;
+	reg [`outputNumber-1 :0] outputReg = 0;
 	
 	
 	
@@ -24,7 +24,7 @@ module outputReg (reset, outputRw, outputRwAddr, outputWriteIn, outputReadOut, o
 		if (reset)
 		begin
 			outputReadOut = 1'bz;
-			$write ("	module outputRegister is reset	");
+			$write ("\nmodule outputRegister is reset	");
 		end
 		
 		else
@@ -35,12 +35,12 @@ module outputReg (reset, outputRw, outputRwAddr, outputWriteIn, outputReadOut, o
 			if (outputRw)	// read output status
 			begin
 				outputReadOut = outputReg[outputRwAddr];
-				$write ("	reading output register	:	module outputRegister	");
+//				$write ("\nreading output register	:	module outputRegister	");
 			end
 			else				// write operation
 			begin
 				outputReg[outputRwAddr] = outputWriteIn;
-				$write ("	writing to the output register	:	module outputRegister	");
+//				$write ("\nwriting to the output register	:	module outputRegister	");
 			end
 		
 		end

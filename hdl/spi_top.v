@@ -19,7 +19,7 @@ module spi_top(clk, sconEN, statREAD, sconIN, statOUT, wrBUF, rdBUF, bufIN, bufO
 		wire [7:0] buffer_out8;
 		
 		
-spiStatReg STATUS_REG (statREAD, statOUT, BF);
+spiStatReg STATUS_REG (BF, statREAD, statOUT);
 
 
 spiConReg CONTROL_REG (sconEN, sconIN, sconOUT);

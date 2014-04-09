@@ -1,5 +1,5 @@
-// 16-bit process controller defines
-// 16-bit process controller defines
+
+// 8-bit Pipelined Processor defines
 
 `define		immDataLen			8
 

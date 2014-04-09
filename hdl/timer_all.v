@@ -43,7 +43,7 @@ module timer (clk, en, reset, type, preset, DN, TT, ACC);
 								
 		default			:	begin
 
-								$display("	Timer is defined for unknown type.\n Valid types: On-delay, Off-delay, retentive-on-delay");
+								$display("\nTimer is defined for unknown type.\n Valid types: On-delay, Off-delay, retentive-on-delay");
 								end
 								
 		endcase
@@ -54,7 +54,7 @@ module timer (clk, en, reset, type, preset, DN, TT, ACC);
 	begin
 		if (reset)
 		begin
-			$write ("	timer module is reset	");
+			$write ("\ntimer module is reset	");
 			TimerType = defaultType;
 		end
 		else
@@ -178,7 +178,7 @@ module timer (clk, en, reset, type, preset, DN, TT, ACC);
 				
 				default		:	begin
 									if (!reset)
-									$display("	Error in timer type	");
+									$display("\nError in timer type	");
 									end
 									
 				endcase
