@@ -10,14 +10,14 @@ module pgmCounter (clk, reset, branch, pcIn, pcOut);
 	
 	output [`instAddrLen-1:0] pcOut;
 	
-	reg [`instAddrLen-1:0] pc = `instAddrLen'b0;
+	reg [`instAddrLen-1:0] pcOut = `instAddrLen'b0;
 	
-	always @ (posedge clk or posedge reset)
+	always @ (posedge clk)
 	begin
 	
 		if (reset)
 		begin
-			pc = `instAddrLen'b0;
+			pcOut = `instAddrLen'b0;
 			$write ("\nprogram counter module is reset. Starting at address 00h	");
 		end
 		
@@ -26,18 +26,15 @@ module pgmCounter (clk, reset, branch, pcIn, pcOut);
 			
 			if(branch)
 			begin
-				pc = pcIn;
+				pcOut = pcIn;
 				$write ("\nbranching at address %h", pcIn);
 			end
 			else
 			begin
-				pc = pc + 1'b1;
+				pcOut = pcOut + 1'b1;
 			end
 		end
 	end	// end always
 	
-	
-	assign pcOut = pc;
-
 
 endmodule

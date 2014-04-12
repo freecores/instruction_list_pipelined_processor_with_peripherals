@@ -12,8 +12,8 @@
 		wire [8:0] addRes = operand1 + operand2;
 		wire [8:0] subRes = operand1 - operand2;
 		
-		reg [8:0] aluOutput;
-		reg carryOutput;
+		reg [8:0] aluOut = 0;
+		reg carryOut = 0;
 		
 		always @ (aluEn or addRes or subRes or op1 or op2 or aluOpcode)
 		begin
@@ -25,53 +25,53 @@
 				case (aluOpcode)
 				
 				`AND_alu	:	begin
-								aluOutput = op1 & op2;
+								aluOut = op1 & op2;
 								end
 								
 				`OR_alu		:	begin
-								aluOutput = op1 | op2;
+								aluOut = op1 | op2;
 								end
 								
 				`XOR_alu	:	begin
-								aluOutput = op1^op2;
+								aluOut = op1^op2;
 								end
 								
 				`GT_alu		:	begin
-								aluOutput = op1>op2 ? 1'b1 : 1'b0;
+								aluOut = op1>op2 ? 1'b1 : 1'b0;
 								end
 								
 				`GE_alu		:	begin
-								aluOutput = op1>=op2 ? 1'b1 : 1'b0;
+								aluOut = op1>=op2 ? 1'b1 : 1'b0;
 								end
 				
 				`EQ_alu		:	begin
-								aluOutput = op1==op2 ? 1'b1 : 1'b0;
+								aluOut = op1==op2 ? 1'b1 : 1'b0;
 								end
 								
 				`LE_alu		:	begin
-								aluOutput = op1<=op2 ? 1'b1 : 1'b0;
+								aluOut = op1<=op2 ? 1'b1 : 1'b0;
 								end
 								
 				`LT_alu		:	begin
-								aluOutput = op1<op2 ? 1'b1 : 1'b0;
+								aluOut = op1<op2 ? 1'b1 : 1'b0;
 								end
 				
 				`ADD_alu	:	begin
-								aluOutput = addRes[7:0];
-								carryOutput = addRes[8];
+								aluOut = addRes[7:0];
+								carryOut = addRes[8];
 								end
 				
 				`SUB_alu	:	begin
-								aluOutput = subRes[7:0];
-								carryOutput = subRes[8];
+								aluOut = subRes[7:0];
+								carryOut = subRes[8];
 								end
 								
 				`LD_data	:	begin
-								aluOutput = op1;
+								aluOut = op2;
 								end
 				
 				default		:	begin
-								aluOutput = 16'b0;
+								aluOut = 16'b0;
 								$write ("\nUnknown operation. \tmodule : ALU");
 								end
 				endcase
@@ -80,12 +80,9 @@
 			else
 			begin
 			
-				aluOutput = aluOutput;
+				aluOut = aluOut;
 			end
 				
 		end
-		
-		assign aluOut = aluOutput;
-		assign carryOut = carryOutput;
 		
 endmodule

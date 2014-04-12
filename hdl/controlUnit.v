@@ -195,9 +195,10 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 
 				`Ld			:	begin
 				// load thr. op2 MUX and alu.... enable acc in next cycle
-						state = sLd;
+						state = sAlu;
 						
 						branch = 0;
+//						accMuxSel = `accMuxSelAluOut;
 						accMuxSel = 0;
 						accEn = 0;
 							
@@ -236,7 +237,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 				
 				
 				`Ldi			:	begin
-						state = sAlu;
+						state = sLd;
 						
 						branch = 1'b0;
 							accMuxSel = `accMuxSelImmData;	// select imm data thr mux
@@ -279,9 +280,9 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 						inputRead = 1'b0;
 
 							case (iomemCode)
-							2'b01	:	begin	bitRamRw = 1'b0;	byteRamRw = 1'b1;	outputRw = 1'b1; bitRamEn = 1'b1;	byteRamEn = 1'b1;	end
-							2'b10	:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b0;	outputRw = 1'b1; bitRamEn = 1'b1;	byteRamEn = 1'b1;	end
-							2'b11	:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b1;	outputRw = 1'b0; end
+							2'b10	:	begin	bitRamRw = 1'b0;	byteRamRw = 1'b1;	outputRw = 1'b1; bitRamEn = 1'b1;	byteRamEn = 1'b1;	end
+							2'b11	:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b0;	outputRw = 1'b1; bitRamEn = 1'b1;	byteRamEn = 1'b1;	end
+							2'b01	:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b1;	outputRw = 1'b0; end
 							default:	begin	bitRamRw = 1'b1;	byteRamRw = 1'b1;	outputRw = 1'b1;	end
 							endcase
 						
@@ -820,7 +821,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 
 				default		:	begin
 				
-				$write ("\nunknown/unused instruction op-code encountered by control unit	");
+				$write ("\n", $time, "ns unknown/unused instruction op-code encountered by control unit");
 //				$stop;
 				end
 				endcase	// end 	case (instOpCode)
@@ -837,9 +838,7 @@ module controlUnit (clk, reset, instOpCode, acc0, iomemCode,
 			
 			
 			sLd		:	begin
-							aluEn = 1'b0;
-							accEn = 1'b1;
-							accMuxSel = `accMuxSelAluOut;
+							accEn = 1'b0;
 							state = s;
 							end		// end case sLd
 							

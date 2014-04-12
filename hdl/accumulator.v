@@ -12,7 +12,7 @@ module accumulator (accIn, accEn, accOut);
 	
 	reg [7:0] accOut;
 
-	always @ (accIn, accEn)
+	always @ (accEn)
 	begin
 		if (accEn)
 		begin

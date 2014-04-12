@@ -128,22 +128,24 @@ module top(clk, reset, IN, OUT
 
 //-------- Fetch Unit Module Instances
 // all necessary
+	
+	wire branch = (~romOut[14] & ~romOut[13] & ~romOut[12] & ~romOut[11] & ~romOut[10]) | ((romOut[10] & ~romOut[13] & ~romOut[12] & ~romOut[11] & ~romOut[14]) & accOut[0]);				// END = 00000; JMP = 00001
 
-	pgmCounter		ProgramCounter (clk_d, reset, branchOutc, instField[9:0], pcOut);
+	pgmCounter		ProgramCounter (clk_d, reset, branch, romOut[9:0], pcOut);
 	
 	
 // instruction ROM is declared using xilinx primitive
-	RAMB16_S18 rom ( .DI(),
-				 .DIP(),
-				 .ADDR(pcOut),
-				 .EN(1'b1),
-				 .WE(),   
-				 .SSR(1'b0),
-				 .CLK(clk_d),
-				 .DO(romOut),
-				 .DOP());
+//	RAMB16_S18 rom ( .DI(),
+//				 .DIP(),
+//				 .ADDR(pcOut),
+//				 .EN(1'b1),
+//				 .WE(),   
+//				 .SSR(1'b0),
+//				 .CLK(clk_d),
+//				 .DO(romOut),
+//				 .DOP());
 
-//	rom	CodeMem (pcOut, romOut);
+	rom	CodeMem (clk_d, pcOut, romOut);
 
 // pipeline register
 
@@ -256,7 +258,7 @@ module top(clk, reset, IN, OUT
 	
 	byteRam				RAM_Byte	(clk, reset, byteRamEnOut, byteRamRwOut, byteIn, instField2[6:0], byteOut);
 	
-	inputRegister		inputStorage	(reset, IN, inputReadOut, instField2[6:0], inputReadOutData);
+	inputRegister		inputStorage	(IN, instField2[6:0], inputReadOutData);
 	
 	outputReg			outputStorage	(reset, outputRwOut, instField2[6:0], accOut[0], outputReadOut, OUT);
 	

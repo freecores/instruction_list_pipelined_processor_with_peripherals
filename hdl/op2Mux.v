@@ -11,10 +11,10 @@ module op2Mux (op2MuxSel, inputReadOut, outputReadOut, bitOut, byteOut, op2MuxOu
 	
 	output [7:0] op2MuxOut;
 	
-	reg [7:0] op2MuxOut;
+	reg [7:0] op2MuxOut = 0;
 	
 	
-	always @ *
+	always @ (op2MuxSel)
 	begin
 	
 		case (op2MuxSel)
@@ -37,7 +37,7 @@ module op2Mux (op2MuxSel, inputReadOut, outputReadOut, bitOut, byteOut, op2MuxOu
 								
 								
 		default			:	begin
-								op2MuxOut = 8'bzzzzzzzz;
+								op2MuxOut = op2MuxOut;
 								end
 								
 		endcase

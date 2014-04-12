@@ -42,7 +42,7 @@ module tb;
 	reset = 1'b1;
 	
 	initial
-	#500	reset = 0;
+	#50	reset = 0;
 	
 	initial
 	begin
