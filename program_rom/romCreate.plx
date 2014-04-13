@@ -70,24 +70,6 @@ while ($inst ne END)
 
 
 
-sub bin2hex {
-     my $bin = shift;
-
-    # Make input bit string a multiple of 4
-    #$bin = substr("0000",length($bin)%4) . $bin if length($bin)%4;
-
-    my ($hex, $nybble) = ("");
-    while (length($bin)) {
-		($nybble,$bin) = (substr($bin,0,4), substr($bin,4)); # (substr($bin,0,4), substr($bin,4));
-		#substr extracts a substring . . .
-        $nybble = eval "0b$nybble";
-        $hex .= substr("0123456789ABCDEF", $nybble, 1);
-    }
-    return $hex;
-}
-
-
-
 
 
 ##############
