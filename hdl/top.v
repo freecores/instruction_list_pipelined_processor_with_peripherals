@@ -300,7 +300,11 @@ module top(clk, reset, IN, OUT
 	
 	inputRegister		inputStorage	(IN, instField2[6:0], inputReadOutData);
 	
-	outputReg			outputStorage	(reset, outputRwOut, instField2[6:0], accOut[0], outputReadOut, OUT);
+	wire outIn;
+	
+	bitNegator			bitNegatorForOutReg	(accOut[0], instField2[9], outIn);
+	
+	outputReg			outputStorage	(reset, outputRwOut, instField2[6:0], outIn, outputReadOut, OUT);
 	
 
 //---------- Timer & Counter Modules
@@ -311,7 +315,7 @@ module top(clk, reset, IN, OUT
 
 
 
-	tcEnableAndType	tcEnableAndTypeModule(entypeEnOut, instField2[6], instField2[5:4], instField2[3:0], enWires, typeWires);
+	tcEnableAndType	tcEnableAndTypeModule(entypeEnOut, accOut[0], instField2[5:4], instField2[3:0], enWires, typeWires);
 	
 	tcAccum				tcAccumModule(tcAccReadOut, instField2[3:0], tcAccWires, tcAccOut);
 	

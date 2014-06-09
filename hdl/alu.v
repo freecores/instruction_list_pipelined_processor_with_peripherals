@@ -41,9 +41,16 @@
 `include "timescale.v"
 `include "defines.v"
 
-	module alu (input [`aluOpcodeLen-1:0] aluOpcode, input [7:0] op1, input [7:0] op2, input aluEn,
-				output [7:0] aluOut, output carryOut);
+	module alu (aluOpcode, op1, op2, aluEn, aluOut, carryOut);
 				
+		
+		input [`aluOpcodeLen-1:0] aluOpcode;
+		input [7:0] op1;
+		input [7:0] op2;
+		input aluEn;
+		
+		output [7:0] aluOut;
+		output carryOut;
 		
 		wire [8:0] operand1 = {1'b0, op1};
 		wire [8:0] operand2 = {1'b0, op2};
@@ -51,7 +58,7 @@
 		wire [8:0] addRes = operand1 + operand2;
 		wire [8:0] subRes = operand1 - operand2;
 		
-		reg [8:0] aluOut = 0;
+		reg [7:0] aluOut = 0;
 		reg carryOut = 0;
 		
 		always @ (aluEn or addRes or subRes or op1 or op2 or aluOpcode)

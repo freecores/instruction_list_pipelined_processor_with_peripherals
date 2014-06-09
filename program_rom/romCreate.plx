@@ -217,13 +217,11 @@ my $iomemaddr = 0;
 						$fld = $zero.$zero.$zero.$zero.$zero.$zero.$addr;
 				};
 		case ETY	{
-						print "\nAssert (1) or De-assert (0) enable signal?\t";
-						my $resp = <STDIN>;		chop($resp);
 						print "\nTimer or Counter Type :\t 00 = on-delayTimer, 01 = off-delayTimer, 10 = retOn-delayTimer\n\t\t\t01 = up-counter, 10 = down-counter\n\t\t";
 						my $resp2 = <STDIN>;	chop($resp2);
 						my $addr = sub2();		my $zero = 0;
 						
-						$fld = $zero.$zero.$zero.$resp.$resp2.$addr;
+						$fld = $zero.$zero.$zero.$zero.$resp2.$addr;
 				};
 		case RST	{
 						print "\nAssert (1) or De-assert (0) Reset signal?\t";
