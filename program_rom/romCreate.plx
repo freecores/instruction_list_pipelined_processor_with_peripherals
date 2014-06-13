@@ -86,8 +86,8 @@ switch ($inst) {
 
 			case END		{ $temp = 0;		$opcod = $temp.$temp.$temp.$temp.$temp;};
 			case JMP		{ $temp = 1;		$opcod = $zero.$zero.$zero.$zero.$temp;};
-			case Ld			{ $temp = 10;		$opcod = $zero.$zero.$zero.$temp;};
-			case Ldi		{ $temp = 11;		$opcod = $zero.$zero.$zero.$temp;};
+			case LD			{ $temp = 10;		$opcod = $zero.$zero.$zero.$temp;};
+			case LDi		{ $temp = 11;		$opcod = $zero.$zero.$zero.$temp;};
 			case ST			{ $temp = 100;		$opcod = $zero.$zero.$temp;};
 			case ADD		{ $temp = 101;		$opcod = $zero.$zero.$temp;};
 			case SUB		{ $temp = 110;		$opcod = $zero.$zero.$temp;};
@@ -160,12 +160,12 @@ my $iomemaddr = 0;
 					chop($fld);
 					};
 					
-		case Ld	{
+		case LD	{
 				$fld = sub1();
 				};
 				
 					
-		case Ldi	{
+		case LDi	{
 					print "\nImmediate Data (8-bit):\t";
 					$temp = <STDIN>;	chop($temp);
 					$fld = $zero.$zero.$temp;
@@ -224,11 +224,9 @@ my $iomemaddr = 0;
 						$fld = $zero.$zero.$zero.$zero.$resp2.$addr;
 				};
 		case RST	{
-						print "\nAssert (1) or De-assert (0) Reset signal?\t";
-						my $resp = <STDIN>;		chop($resp);
 						my $zero = 0;
 						my $addr = sub2();
-						$fld = $zero.$zero.$zero.$zero.$zero.$resp.$addr;
+						$fld = $zero.$zero.$zero.$zero.$zero.$zero.$addr;
 				};
 		case LdTC	{
 						my $addr = sub2();		my $zero = 0;
@@ -291,7 +289,7 @@ sub	sub1{
 					if ($response eq Y){	$negate = 1;}
 					else {$negate = 0};
 					
-					print "\nInput (i) / Output (o) / bitRAM (b) / ByteRAM (B)?";
+					print "\nInput (i) / Output (o) / bitRAM (b) / ByteRAM (B)?\t";
 					my $select = <STDIN>;	chop($select);
 					if ($select eq i){
 										my $zero = 0;	$iomem = $zero.$zero;

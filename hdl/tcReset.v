@@ -52,7 +52,7 @@ module tcReset (tcResetEn, resetIn, tcAddr, resetOut);
 	reg [`tcNumbers-1:0] resets;
 	
 	
-	always @ *
+	always @ (posedge tcResetEn)
 	begin
 		if (tcResetEn)
 		begin

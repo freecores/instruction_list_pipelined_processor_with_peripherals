@@ -53,7 +53,7 @@ module tcPreset (tcPresetEn, presetIn, tcAddr, presetOut);
 	reg [`tcPresetLen-1:0] presets [`tcNumbers-1:0];
 	
 	
-	always @ *
+	always @ (posedge tcPresetEn)
 	begin
 		if (tcPresetEn)
 		begin

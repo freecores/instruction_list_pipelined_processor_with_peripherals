@@ -49,10 +49,10 @@ module outputReg (reset, outputRw, outputRwAddr, outputWriteIn, outputReadOut, o
 	input outputWriteIn;
 	
 	output outputReadOut;
-	output [`outputNumber-1:0] outputs;
+	output wire [`outputNumber-1:0] outputs;
 	
 	reg outputReadOut;
-	reg [`outputNumber-1:0] outputs = 0;
+//	reg [`outputNumber-1:0] outputs = 0;
 	reg [`outputNumber-1 :0] outputReg = 0;
 	
 	
@@ -69,8 +69,6 @@ module outputReg (reset, outputRw, outputRwAddr, outputWriteIn, outputReadOut, o
 		else
 		begin
 		
-			outputs = outputReg;
-		
 			if (outputRw)	// read output status
 			begin
 				outputReadOut = outputReg[outputRwAddr];
@@ -79,12 +77,14 @@ module outputReg (reset, outputRw, outputRwAddr, outputWriteIn, outputReadOut, o
 			else				// write operation
 			begin
 				outputReg[outputRwAddr] = outputWriteIn;
-//				$write ("\nwriting to the output register	:	module outputRegister	");
+				$write ("\nwriting to the output register	:	module outputRegister	");
 			end
 		
 		end
 	
 	end
+	
+	assign outputs = outputReg;
 
 
 endmodule

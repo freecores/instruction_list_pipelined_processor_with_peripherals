@@ -54,7 +54,7 @@ module tcAccum (tcAccumRead, tcAddr, tcAccumIn, tcAccumOut);
 	reg [`tcAccLen-1:0] tcAccumOut;
 	
 	
-	always @ (tcAccumRead or tcAddr)
+	always @ (posedge tcAccumRead)
 	begin
 		if (tcAccumRead)
 		begin

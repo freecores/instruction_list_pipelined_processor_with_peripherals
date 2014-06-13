@@ -47,10 +47,6 @@ module top(clk, reset, IN, OUT
 					, rx, tx
 				`endif
 				
-				`ifdef SPI_peripheral
-					, MISO, MOSI, SCK
-				`endif				
-				
 				);
 
 
@@ -62,11 +58,7 @@ module top(clk, reset, IN, OUT
 	input rx;
 	output tx;
 	`endif
-	
-	`ifdef SPI_peripheral
-	input MISO;
-	output MOSI, SCK;
-	`endif
+
 
 // wires (interconnects) of execution unit
 
@@ -92,17 +84,14 @@ module top(clk, reset, IN, OUT
 	wire aluEnc;
 	wire [`aluOpcodeLen-1:0] aluOpcodeOutc;
 	wire bitRamEnOutc, bitRamRwOutc, byteRamEnOutc, byteRamRwOutc;
-	wire inputReadOutc, outputRwOutc;
+	wire outputRwOutc;
 	`ifdef timerAndCounter_peripheral
-	wire entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc, tcLoadEnOutc;
+	wire entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc;
 	`endif
 	`ifdef UART_peripheral
 	wire uartReadOutc, uartWriteOutc;
 	wire [7:0] uartDataOut;
 	wire rxEmpty, txFull;
-	`endif
-	`ifdef SPI_peripheral
-	wire sconEnOutc, spiStatReadOutc, spiBufReadOutc, spiBufWriteOutc, spiBufShiftOutc;
 	`endif
 
 	wire branchOut;
@@ -112,17 +101,13 @@ module top(clk, reset, IN, OUT
 	wire aluEn;
 	wire [`aluOpcodeLen-1:0] aluOpcodeOut;
 	wire bitRamEnOut, bitRamRwOut, byteRamEnOut, byteRamRwOut;
-	wire inputReadOut, outputRwOut;
+	wire outputRwOut;
 	`ifdef timerAndCounter_peripheral
-	wire entypeEnOut, tcAccReadOut, tcResetEnOut, tcPresetEnOut, tcLoadEnOut;
+	wire entypeEnOut, tcAccReadOut, tcResetEnOut, tcPresetEnOut;
 	`endif
 	`ifdef UART_peripheral
 	wire uartReadOut, uartWriteOut;
 	`endif
-	`ifdef SPI_peripheral
-	wire sconEnOut, spiStatReadOut, spiBufReadOut, spiBufWriteOut, spiBufShiftOut;
-	`endif
-
 	
 	
 // wires (interconnects) of timer & counter
@@ -138,11 +123,6 @@ module top(clk, reset, IN, OUT
 	wire [(`tcNumbers*2)-1:0] typeWires;
 	wire [(`tcNumbers*`tcAccLen)-1:0] tcAccWires;
 
-`endif
-
-`ifdef SPI_peripheral
-
-	wire [7:0] spiStatOut, spiBufOut;
 `endif
 
 
@@ -198,18 +178,14 @@ module top(clk, reset, IN, OUT
 
 //-------- Control Unit Module Instance
 
-	controlUnit		CONTROL_UNIT (clk, reset, instOpCode1, accOut[0], instField2[8:7],
-											branchOutc,
+	controlUnit		CONTROL_UNIT (clk, reset, instOpCode1, instField2[8:7],
 									accMuxSelOutc, accEnOutc, op2MuxSelOutc, aluEnc, aluOpcodeOutc, bitRamEnOutc,
-									bitRamRwOutc, byteRamEnOutc, byteRamRwOutc, inputReadOutc, outputRwOutc
+									bitRamRwOutc, byteRamEnOutc, byteRamRwOutc, outputRwOutc
 								`ifdef timerAndCounter_peripheral
-								, entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc, tcLoadEnOutc
+								, entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc
 								`endif
 								`ifdef UART_peripheral
 								, uartReadOutc, uartWriteOutcc
-								`endif
-								`ifdef SPI_peripheral
-								, sconEnOutc, spiStatReadOutc, spiBufReadOutc, spiBufWriteOutc, spiBufShiftOutc
 								`endif
 											
 											);
@@ -221,35 +197,26 @@ module top(clk, reset, IN, OUT
 	
 
 	ppReg2	PipeLine_Reg2 (clk,
-									branchOutc,
 									accMuxSelOutc, accEnOutc, op2MuxSelOutc, aluEnc, aluOpcodeOutc, bitRamEnOutc,
-									bitRamRwOutc, byteRamEnOutc, byteRamRwOutc, inputReadOutc, outputRwOutc
+									bitRamRwOutc, byteRamEnOutc, byteRamRwOutc, outputRwOutc
 								`ifdef timerAndCounter_peripheral
-								, entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc, tcLoadEnOutc
+								, entypeEnOutc, tcAccReadOutc, tcResetEnOutc, tcPresetEnOutc
 								`endif
 								`ifdef UART_peripheral
 								, uartReadOutc, uartWriteOutcc
 								`endif
-								`ifdef SPI_peripheral
-								, sconEnOutc, spiStatReadOutc, spiBufReadOutc, spiBufWriteOutc, spiBufShiftOutc
-								`endif
 								, instField1
 									
-									, branchOut,
-									accMuxSelOut, accEnOut, op2MuxSelOut, aluEn, aluOpcodeOut,
+									,accMuxSelOut, accEnOut, op2MuxSelOut, aluEn, aluOpcodeOut,
 									bitRamEnOut, bitRamRwOut, byteRamEnOut, byteRamRwOut,
-									inputReadOut, outputRwOut
+									outputRwOut
 									
 									`ifdef timerAndCounter_peripheral
-										, entypeEnOut, tcAccReadOut, tcResetEnOut, tcPresetEnOut, tcLoadEnOut
+										, entypeEnOut, tcAccReadOut, tcResetEnOut, tcPresetEnOut
 									`endif
 									
 									`ifdef UART_peripheral
 										, uartReadOut, uartWriteOut
-									`endif
-									
-									`ifdef SPI_peripheral
-										, sconEnOut, spiStatReadOut, spiBufReadOut, spiBufWriteOut, spiBufShiftOut
 									`endif
 									
 									, instField2
@@ -268,9 +235,6 @@ module top(clk, reset, IN, OUT
 										`endif
 										`ifdef UART_peripheral
 										, uartDataOut, {rxEmpty, txFull}
-										`endif
-										`ifdef SPI_peripheral
-										, spiStatOut, spiBufOut
 										`endif
 										, accMuxOut
 										);
@@ -313,17 +277,15 @@ module top(clk, reset, IN, OUT
 `ifdef timerAndCounter_peripheral
 
 
-
-
 	tcEnableAndType	tcEnableAndTypeModule(entypeEnOut, accOut[0], instField2[5:4], instField2[3:0], enWires, typeWires);
 	
 	tcAccum				tcAccumModule(tcAccReadOut, instField2[3:0], tcAccWires, tcAccOut);
 	
-	tcReset				tcResetModule(tcResetEnOut, instField2[4], instField2[3:0], resetWires);
+	tcReset				tcResetModule(tcResetEnOut, accOut[0], instField2[3:0], resetWires);
 	
 	tcPreset				tcPresetModule(tcPresetEnOut, accOut, instField2[3:0], presetWires);
 	
-	tcLoad				tcLoadModule(tcLoadEnOut, instField2[3:0], dnWires, ttWires, cuWires, cdWires, tcLoadOut);
+	tcLoad				tcLoadModule(instField2[3:0], dnWires, ttWires, cuWires, cdWires, tcLoadOut);
 	
 	timer					timer0	(clk_t, enWires[0], resetWires[0], typeWires[1:0], presetWires[7:0], dnWires[0], ttWires[0], tcAccWires[7:0]);
 	
@@ -366,15 +328,4 @@ module top(clk, reset, IN, OUT
 
 `endif
 
-//---------- SPI Modules
-// optional
-
-`ifdef SPI_peripheral
-
-
-	spi_top		SPI_TOP (clk, sconEnOut, spiStatReadOut, instField2[7:0], spiStatOut, spiBufWriteOut, spiBufReadOut, aluOut, spiBufOut, MI, MO, SCK);
-
-
-`endif
-	
 endmodule

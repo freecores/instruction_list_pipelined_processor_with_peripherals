@@ -54,7 +54,7 @@ module tcEnableAndType (entypeEn, enIn, typeIn, tcAddr, enOut, typeOut);
 	reg enables [`tcNumbers-1:0];
 	reg [`tcTypeLen-1:0] types [`tcNumbers-1:0];
 	
-	always @ *
+	always @ (posedge entypeEn)
 	begin
 		if (entypeEn)
 		begin

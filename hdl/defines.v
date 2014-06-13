@@ -76,10 +76,10 @@
 `define		UARTrd				`instOpCodeLen'b10110
 `define		UARTwr				`instOpCodeLen'b10111
 `define		UARTstat				`instOpCodeLen'b11000
-`define		SPIxFER				`instOpCodeLen'b11001
-`define		SPIstat				`instOpCodeLen'b11010
-`define		SPIwBUF				`instOpCodeLen'b11011
-`define		SPIrBUF				`instOpCodeLen'b11100
+//`define		SPIxFER				`instOpCodeLen'b11001
+//`define		SPIstat				`instOpCodeLen'b11010
+//`define		SPIwBUF				`instOpCodeLen'b11011
+//`define		SPIrBUF				`instOpCodeLen'b11100
 
 // alu opcodes
 `define		aluOpcodeLen		4
@@ -122,8 +122,6 @@
 `define		accMuxSelTcAcc			`accMuxSelLen'b11
 `define		accMuxSelUartData		`accMuxSelLen'b100
 `define		accMuxSelUartStat		`accMuxSelLen'b101
-`define		accMuxSelSpiStat		`accMuxSelLen'b110
-`define		accMuxSelSpiBuf		`accMuxSelLen'b111
 
 // operand2 multiplexer
 `define		op2MuxSelLen			4		// 2^4 = 16 selections available for op2
@@ -140,7 +138,6 @@
 // peripheral defines
 `define		timerAndCounter_peripheral
 `define		UART_peripheral
-`define		SPI_peripheral
 
 
 //-----------------------------------------------------------------------------------------------------
